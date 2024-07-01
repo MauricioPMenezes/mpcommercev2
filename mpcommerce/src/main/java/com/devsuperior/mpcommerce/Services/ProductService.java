@@ -1,5 +1,6 @@
 package com.devsuperior.mpcommerce.Services;
 
+import com.devsuperior.mpcommerce.Services.exceptions.ResourceNotFoundException;
 import com.devsuperior.mpcommerce.dto.ProductDTO;
 import com.devsuperior.mpcommerce.entities.Product;
 import com.devsuperior.mpcommerce.repositories.ProductRepository;
@@ -18,10 +19,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
-        Optional<Product> result = repository.findById(id);
-        Product product = result.get();
-        ProductDTO dto = new ProductDTO(product);
-        return dto;
+        Product product = repository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Recurso não encontrado!"));
+        return new ProductDTO(product);
+
     }
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable){
