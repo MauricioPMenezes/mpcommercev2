@@ -1,5 +1,6 @@
 package com.devsuperior.mpcommerce.controllers.handlers;
 
+import com.devsuperior.mpcommerce.Services.exceptions.DatabaseException;
 import com.devsuperior.mpcommerce.Services.exceptions.ResourceNotFoundException;
 import com.devsuperior.mpcommerce.dto.CustomError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,13 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<CustomError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+        CustomError err = new CustomError(Instant.now(),status.value(),e.getMessage(),request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<CustomError> resourceNotFound(DatabaseException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         CustomError err = new CustomError(Instant.now(),status.value(),e.getMessage(),request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
