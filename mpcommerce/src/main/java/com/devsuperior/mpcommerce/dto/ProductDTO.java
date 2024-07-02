@@ -1,13 +1,24 @@
 package com.devsuperior.mpcommerce.dto;
 
 import com.devsuperior.mpcommerce.entities.Product;
+import jakarta.validation.constraints.*;
 
 public class ProductDTO {
 
+
     private Long id;
+
+    @Size(min=3 , max = 80 , message = "Nome precisa ter entre 3 e 80 caracteres")
+    @NotBlank(message = "Campo Nome Requerido")
     private String  name;
+
+    @Size(min=10 , message = "Descrição precisa ter no minimo 10 caracteres")
+    @NotBlank(message = "Campo Requerido")
     private String description;
+
+    @Positive(message = "o Preço deve ser positivo")
     private Double price;
+
     private String imgUrl;
 
     

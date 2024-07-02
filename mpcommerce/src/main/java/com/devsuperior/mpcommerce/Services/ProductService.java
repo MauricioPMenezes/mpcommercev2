@@ -5,6 +5,7 @@ import com.devsuperior.mpcommerce.Services.exceptions.ResourceNotFoundException;
 import com.devsuperior.mpcommerce.dto.ProductDTO;
 import com.devsuperior.mpcommerce.entities.Product;
 import com.devsuperior.mpcommerce.repositories.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -46,11 +47,16 @@ public class ProductService {
 
     @Transactional
     public ProductDTO update(Long id,ProductDTO dto){
+        try {
+            Product  entity =repository.getReferenceById(id);
+            CopyDtoToEntity(dto,entity);
+            entity =repository.save(entity);
+            return new ProductDTO(entity);
+        }catch (EntityNotFoundException e){
 
-        Product  entity =repository.getReferenceById(id);
-        CopyDtoToEntity(dto,entity);
-        entity =repository.save(entity);
-        return new ProductDTO(entity);
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
